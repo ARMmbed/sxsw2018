@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 #include <stdio.h>
-#include "lorawan/LoRaWANInterface.h"
-#include "lorawan/system/lorawan_data_structures.h"
-#include "events/EventQueue.h"
+#include "LoRaWANInterface.h"
+#include "lorawan_data_structures.h"
+#include "EventQueue.h"
 
 // Application helpers
 #include "lora_radio_helper.h"
