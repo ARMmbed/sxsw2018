@@ -127,7 +127,18 @@ To exit, press `CTRL+A` then type `:quit`.
 
 ## 3. Importing the LoRaWAN example
 
->TODO: Import LoRaWAN example. Stop where you need to enter LoRaWAN keys
+Now it's time to connect your device to the internet over LoRaWAN. For this we prepared an example application already which you can import in the online compiler.
+
+1. Go back to the Online Compiler.
+1. Click *Import > Click here to import from URL*.
+1. Enter `https://github.com/armmbed/sxsw2018`.
+1. Click *Import*.
+
+    ![Importing the SXSW2018 repo](media/mbed6.png)
+
+Now we need to program some keys in the device. LoRaWAN uses an end-to-end encryption scheme that uses two session keys. The network server holds one key, and the application server holds the other. (In this tutorial, TTN fulfils both roles). These session keys are created when the device joins the network. For the initial authentication with the network, the application needs its device EUI, the EUI of the application it wants to join (referred to as the application EUI) and a preshared key (the application key).
+
+Let's register this device in The Things Network and grab some keys!
 
 ## Connecting to The Things Network
 
@@ -179,4 +190,12 @@ To exit, press `CTRL+A` then type `:quit`.
 
    ![copy-appeui](media/copy-appeui.png)
 
->TODO: Paste this in Arm Mbed OS
+### Pasting them in the Online Compiler
+
+In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Application EUI and Application Key in:
+
+![Put in the keys](media/media7.png)
+
+**Note:** Do not forget the `;` after pasting.
+
+Now click *Compile* and flash the application to your board again. The board should now connect to The Things Network. Inspect the *Data* tab in the TTN console to see the device connecting.
