@@ -88,16 +88,6 @@ int main (void)
     callbacks.events = mbed::callback(lora_event_handler);
     lorawan->add_app_callbacks(&callbacks);
 
-    // Set number of retries in case of CONFIRMED messages
-    if (lorawan->set_confirmed_msg_retries(CONFIRMED_MSG_RETRY_COUNTER)
-                                          != LORAWAN_STATUS_OK) {
-        printf("\r\n set_confirmed_msg_retries failed! \r\n\r\n");
-        return -1;
-    }
-
-    printf("\r\n CONFIRMED message retries : %d \r\n",
-           CONFIRMED_MSG_RETRY_COUNTER);
-
     // Enable adaptive data rate
     if (lorawan->enable_adaptive_datarate() != LORAWAN_STATUS_OK) {
         printf("\r\n enable_adaptive_datarate failed! \r\n");
