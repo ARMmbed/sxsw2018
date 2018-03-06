@@ -1,0 +1,10 @@
+.mbed
+.vscode/
+Cayenne-LPP/
+libxDot-dev-mbed5/
+mbed-os/
+mbed_config.h
+mbed_settings.*
+GettingStarted.html
+Makefile
+mbed-semtech-lora-rf-drivers/
