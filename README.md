@@ -199,3 +199,65 @@ In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Appli
 **Note:** Do not forget the `;` after pasting.
 
 Now click *Compile* and flash the application to your board again. The board should now connect to The Things Network. Inspect the *Data* tab in the TTN console to see the device connecting.
+
+## Extra credit
+
+### Relaying data back to the device
+
+We only *send* messages to the network. But you can also relay data back to the device. Note that LoRaWAN devices can only receive messages when a RX window is open. This RX window opens right after a transmission, so you can only relay data back to the device right after sending.
+
+To send some data to the device:
+
+1. Open the device page in the TTN console.
+1. Under 'Downlink', enter some data under 'Payload' and click *Send*.
+1. Inspect the logs on the device to see the device receive the message - note that messages are not guaranteed to end up at the device. The 'Confirmed' flag can help if this is a necessity.
+
+Now let's do something useful... Control the LED on the board over LoRaWAN.
+
+First, we need to disable sleep behavior for the LED, because currently it always goes off when the device is asleep.
+
+1. In `dot_util.cpp` change:
+
+    ```cpp
+        if (dot->getWakePin() != GPIO0 || dot->getWakeMode() == mDot::RTC_ALARM) {
+            GPIO_InitStruct.Pin = GPIO_PIN_4;
+            GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+            GPIO_InitStruct.Pull = GPIO_NOPULL;
+            HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        }
+    ```
+
+    into:
+
+    ```cpp
+        if (dot->getWakePin() != GPIO0 || dot->getWakeMode() == mDot::RTC_ALARM) {
+            // GPIO_InitStruct.Pin = GPIO_PIN_4;
+            // GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+            // GPIO_InitStruct.Pull = GPIO_NOPULL;
+            // HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        }
+    ```
+
+1. In `dot_util.cpp` change:
+
+    ```cpp
+    // PB_0, PB_1, PB_3 & PB_4 to analog nopull
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_3 | GPIO_PIN_4;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    ```
+
+    into:
+
+    ```cpp
+    // PB_0, PB_1, PB_3 & PB_4 to analog nopull
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_3; // | GPIO_PIN_4;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    ```
+
+1. Those changes will no longer shut down the LED when the device is asleep.
+
+Now look at `RadioEvent.h` to the line where the messages are received. Now change the behavior so that the LED can be controlled through a downlink message.

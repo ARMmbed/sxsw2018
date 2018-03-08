@@ -1,1 +1,9 @@
-mbed_app.json
+{
+    "target_overrides": {
+        "*": {
+            "platform.stdio-convert-newlines": true,
+            "platform.stdio-baud-rate": 9600,
+            "platform.default-serial-baud-rate": 9600
+        }
+    }
+}
