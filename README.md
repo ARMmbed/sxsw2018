@@ -4,11 +4,11 @@ Welcome to our session at SXSW 2018. If you have any questions, please just give
 
 In this session you'll be building five examples, introducing you to:
 
-1. xxx
-1. xxx
-1. xxx
-1. xxx
-1. xxx
+1. Building IoT devices with Arm Mbed.
+1. Hooking up an optical particle sensor to a development board.
+1. Connecting your device to The Things Network using LoRaWAN.
+1. Data visualization of particle sensors.
+1. Drawing all sensors on a single map, giving live insight in Austin's pollution numbers.
 
 In case you're stuck this document will help you get back on track. If you're a fast learner, there are 'extra credit'-assignments at the end of each section. Please help your neighbours as well :-)
 
@@ -22,32 +22,48 @@ If you are on Windows, install:
 
 1. [Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
+1. [Node.js](https://nodejs.org) - to show visualizations.
 
 **Linux**
 
 If you're on Linux, install:
 
 1. screen - e.g. via `sudo apt install screen`
+1. [Node.js](https://nodejs.org) - to show visualizations.
 
 **MacOS**
 
-Nothing required.
+1. [Node.js](https://nodejs.org) - to show visualizations.
 
 ## Building the circuit
 
-We're using the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) development board, which contains the Multi-Tech xDot module. Let's connect some sensors and verify that the board works.
+We're using the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) development board, which contains the Multi-Tech xDot module. In addition you'll have a battery holder, some batteries and an optical particle sensor. Let's connect these sensors and verify that the board works.
 
 Grab:
 
-* XXX
+* Development board.
+* Micro-USB cable.
+* Optical particle sensor.
+* 3x jumper wires.
+* A box.
 
-The Grove sensors have four wires. Yellow = data line, white = another data line, red = power, black = ground. In this workshop we'll only use yellow, red and black. We'll use the jumper wires to connect the sensor to the board (because we don't have Grove base shields).
+The particle sensor needs to be in the box, because it needs to have consistent lighting. Place the sensor in the box like this (use some velcro):
 
-XXX
+*Image here*
+
+To connect the particle sensor you use the yellow, red and black wires. We'll use the jumper wires to connect the sensor to the board (because we don't have Grove base shields).
+
+Plug the jumper wires into the Grove connector, and connect:
+
+* Red -> 5V
+* Black -> GND
+* Yellow -> GPIO2
+
+*Image here*
 
 ## 1. A simple application
 
-Now let's build a simple application which reads the sensor data and prints it to the serial console.
+Now let's build a simple application which reads the sensor data and prints it to the serial console. Note that it takes three minutes to get the sensor to warm up!
 
 1. Go to [https://os.mbed.com](https://os.mbed.com) and sign up (or sign in).
 1. Go to the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) platform page and click *Add to your Mbed compiler*.
