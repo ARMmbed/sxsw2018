@@ -1,9 +1,8 @@
 .mbed
 .vscode/
+BUILD/
 Cayenne-LPP/
 libxDot-dev-mbed5/
 mbed-os/
-mbed_config.h
+.mbed
 mbed_settings.*
-GettingStarted.html
-Makefile
