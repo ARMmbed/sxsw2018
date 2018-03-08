@@ -27,7 +27,9 @@ TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
 let devices = {};
 
 if (fs.existsSync(dbFile)) {
+    console.time('LoadingDB');
     devices = JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
+    console.timeEnd('LoadingDB');
 }
 
 // And handle requests

@@ -79,8 +79,11 @@ h2 {
 }
 
 @media(max-width: 600px) {
+  #header {
+    height: 16px;
+  }
   .logo {
-    height: 20px;
+    height: 16px;
     margin: 0 8px;
     float: right;
   }
