@@ -122,11 +122,9 @@ void update_ota_config_id_key(uint8_t *network_id, uint8_t *network_key, uint8_t
         }
     }
 
-    if (current_ack != ack) {
-        // logInfo("changing acks from %u to %u", current_ack, ack);
-        if (dot->setAck(ack) != mDot::MDOT_OK) {
-            logError("failed to set acks to %u", ack);
-        }
+    // logInfo("changing acks from %u to %u", current_ack, ack);
+    if (dot->setAck(ack) != mDot::MDOT_OK) {
+        logError("failed to set acks to %u", ack);
     }
 }
 

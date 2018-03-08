@@ -33,10 +33,11 @@
 
     socket.on('particle-change', function(device, ts, value) {
       console.log('particle-change', device.devId, device.eui, ts, value);
+      console.log(device);
 
       var d = window.devices.filter(function(d) { return d.devId === device.devId })[0];
       if (!d) {
-        d = { devId: device.devId, eui: device.eui, lat: device.lat, lon: device.lng, particles: [] };
+        d = { devId: device.devId, eui: device.eui, lat: device.lat, lng: device.lng, particles: [] };
         window.devices.push(d);
         window.addDevice(d);
       }
@@ -47,7 +48,7 @@
       console.log('location-change', device.devId, device.eui, lat, lng);
       var d = window.devices.filter(function(d) { return d.devId === device.devId })[0];
       if (!d) {
-        d = { devId: device.devId, eui: device.eui, lat: device.lat, lon: device.lng, particles: [] };
+        d = { devId: device.devId, eui: device.eui, lat: device.lat, lng: device.lng, particles: [] };
         window.devices.push(d);
         window.addDevice(d);
       }

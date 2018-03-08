@@ -82,6 +82,8 @@ ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
 
         if (!d.lat) {
             d.lat = 30.2672 + (Math.random() / 10 - 0.05);
+        }
+        if (!d.lng) {
             d.lng = -97.7341 + (Math.random() / 10 - 0.05);
         }
 
