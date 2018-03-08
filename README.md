@@ -194,7 +194,7 @@ Let's register this device in The Things Network and grab some keys!
 
 In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Application EUI and Application Key in:
 
-![Put in the keys](media/media7.png)
+![Put in the keys](media/mbed7.png)
 
 **Note:** Do not forget the `;` after pasting.
 
