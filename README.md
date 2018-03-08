@@ -221,7 +221,7 @@ With these keys we can write a Node.js application that can retrieve data from T
 1. Create a new folder:
 
     ```
-    $ mkdir sxsw-ttn-api
+    $ mkdir sxsw-ttn-api blessed blessed-contrib
     ```
 
 1. In this folder run:
@@ -258,8 +258,76 @@ With these keys we can write a Node.js application that can retrieve data from T
 
 The application authenticates with the The Things Network and receives any message from your device.
 
+**Showing simple graphs**
+
+We can also graph the values directly to the console. Replace `server.js` with:
+
+```js
+let TTN_APP_ID = 'YOUR_APP_ID';
+let TTN_ACCESS_KEY = 'YOUR_ACCESS_KEY';
+
+const ttn = require('ttn');
+const blessed = require('blessed');
+const contrib = require('blessed-contrib');
+const screen = blessed.screen();
+const line = contrib.line({ width: 80, height: 20, left: 0, bottom: 0, xPadding: 5, yPadding: 10, minY: 0, maxY: 5, numYLabels: 7 });
+
+let data = [
+    { title: 'Air pollution',
+        x: [ ],
+        y: [ ],
+        style: {
+            line: 'red'
+        }
+    }
+];
+
+TTN_APP_ID = process.env['TTN_APP_ID'] || TTN_APP_ID;
+TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
+
+let series = [];
+
+ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
+    client.on('uplink', (devId, payload) => {
+        // console.log('retrieved uplink message', devId, payload);
+
+        data[0].x.push(new Date(payload.metadata.time).toLocaleTimeString().split(' ')[0]);
+        data[0].y.push(payload.payload_fields.analog_in_1);
+
+        line.setData(data);
+        screen.render();
+    });
+
+    console.log('Connected to The Things Network data channel');
+});
 
 
+screen.append(line); //must append before setting data
+
+screen.key(['escape', 'q', 'C-c'], function(ch, key) {
+  return process.exit(0);
+});
+```
+
+**Extra credit**
+
+There's some limitations in our current graph:
+
+1. It only shows a single device at the same time.
+1. The graph is drawn in the console.
+
+Some extra credit excercises:
+
+1. Change the application so that it can show multiple devices at the same time.
+    * You can achieve this by inspecting `payload.dev_id` - this is the device that the message originated from.
+    * Add a new series for every device that you see.
+    * Work with your neighbor to get multiple devices in your application (they need to change their keys to your app).
+1. Turn this demo into a web application.
+    * Node.js + socket.io can be used to push new events down to the browser ([tutorial here](http://www.programwitherik.com/getting-started-with-socket-io-node-js-and-express/)).
+    * Send the events from TTN -> your node app -> browser, and graph them in the browser.
+1. Storing data.
+    * At the moment nothing is stored.
+    * Store the data in a file, or in a database and read that back when you start the application.
 
 ## Extra credit
 
