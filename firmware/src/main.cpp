@@ -14,6 +14,8 @@ int main() {
     connect_to_ttn(&events);
 
     while (true) {
+        printf("\n");
+
         // join network if not joined
         if (!dot->getNetworkJoinStatus()) {
             join_network();

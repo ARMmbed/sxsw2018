@@ -1,0 +1,25 @@
+{
+  "name": "sxsw-ttn-api",
+  "version": "1.0.0",
+  "description": "Using the TTN API to relay data off devices",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armmbed/sxsw2018.git"
+  },
+  "keywords": [
+    "mbed"
+  ],
+  "author": "Jan Jongboom <jan.jongboom@arm.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/armmbed/sxsw2018/issues"
+  },
+  "homepage": "https://github.com/armmbed/sxsw2018#readme",
+  "dependencies": {
+    "ttn": "^2.3.1"
+  }
+}

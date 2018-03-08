@@ -200,6 +200,67 @@ In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Appli
 
 Now click *Compile* and flash the application to your board again. The board should now connect to The Things Network. Inspect the *Data* tab in the TTN console to see the device connecting.
 
+## 4. Getting data out of The Things Network
+
+To get some data out of The Things Network you can use their API. Today we'll use the node.js API, but there are many more.
+
+First, you need the application ID, and the application key.
+
+1. Open the TTN console and go to your application.
+1. Your application ID is noted on the top, write it down.
+
+    ![TTN App ID](media/ttn17.png)
+
+1. Your application Key is at the bottom of the page. Click the 'show' icon to make it visible and note it down.
+
+    ![TTN App Key](media/ttn18.png)
+
+With these keys we can write a Node.js application that can retrieve data from TTN.
+
+1. Open a terminal or command prompt.
+1. Create a new folder:
+
+    ```
+    $ mkdir sxsw-ttn-api
+    ```
+
+1. In this folder run:
+
+    ```
+    $ npm install ttn
+    ```
+
+1. Create a new file `server.js` in this folder, and add the following content (replace YOUR_APP_ID and YOUR_ACCESS_KEY with the respective values from the TTN console):
+
+    ```js
+    let TTN_APP_ID = 'YOUR_APP_ID';
+    let TTN_ACCESS_KEY = 'YOUR_ACCESS_KEY';
+
+    const ttn = require('ttn');
+
+    TTN_APP_ID = process.env['TTN_APP_ID'] || TTN_APP_ID;
+    TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
+
+    ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
+        client.on('uplink', (devId, payload) => {
+            console.log('retrieved uplink message', devId, payload);
+        });
+
+        console.log('Connected to The Things Network data channel');
+    });
+    ```
+
+1. Now run:
+
+    ```
+    $ node server.js
+    ```
+
+The application authenticates with the The Things Network and receives any message from your device.
+
+
+
+
 ## Extra credit
 
 ### Relaying data back to the device
