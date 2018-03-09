@@ -21,9 +21,14 @@
   "keywords": [
     "mbed",
     "ttn",
-    "sxsw"
+    "sxsw",
+    "lorawan",
+    "the things network"
   ],
-  "author": "Jan Jongboom <jan.jongboom@arm.com>",
+  "contributors": [
+    "Jan Jongboom <jan.jongboom@arm.com>",
+    "Johan Stokking <johan@thethingsnetwork.org>"
+  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/armmbed/sxsw2018/issues"
