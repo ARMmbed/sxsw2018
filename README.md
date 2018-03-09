@@ -22,18 +22,18 @@ If you are on Windows, install:
 
 1. [Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 **Linux**
 
 If you're on Linux, install:
 
 1. screen - e.g. via `sudo apt install screen`
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 **MacOS**
 
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 ## Building the circuit
 
@@ -179,6 +179,12 @@ Let's register this device in The Things Network and grab some keys!
 7. Click **Add application**
 
    ![application-overview](media/application-overview.png)
+
+   >LoRaWAN devices send binary data to minimize the payload size. This reduces channel utilization and power consumption. Applications, however, like to work with JSON objects or even XML. In order to decode binary payload to an object, The Things Network supports [CayenneLPP](https://www.thethingsnetwork.org/docs/devices/arduino/api/cayennelpp.html) and Payload Functions: JavaScript lambda functions to encode and decode binary payload and JSON objects. In this example, we use CayenneLPP.
+
+8. Go to **Payload Format** and select **CayenneLPP**
+
+   ![payload-format](media/payload-format.png)
 
 ### Registering your Device
 
