@@ -49,7 +49,7 @@ Grab:
 
 The particle sensor needs to be in the box, because it needs to have consistent lighting. Place the sensor in the box like this (use some velcro):
 
-*Image here*
+![Dust sensor in a box](media/dust1.jpg)
 
 To connect the particle sensor you use the yellow, red and black wires. We'll use the jumper wires to connect the sensor to the board (because we don't have Grove base shields).
 
@@ -59,7 +59,7 @@ Plug the jumper wires into the Grove connector, and connect:
 * Black -> GND
 * Yellow -> GPIO3
 
-*Image here*
+![Wires](media/dust2.jpg) ![Wires](media/dust3.jpg)
 
 ## 1. A simple application
 
