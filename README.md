@@ -539,7 +539,7 @@ Remember the temperature and humidity sensors from 3. and 4.? Add that informati
 We want this data set to be practical, and outlive SXSW! For this purpose we have hosted the web application on a public server. It'd be great if you can all add your device to the map.
 
 1. Go to the TTN console and add a new access key.
-1. Go to [the hosted application](http://bit.ly/sxsw-dust-monitor).
+1. Go to [the hosted application](http://sxsw2018.thethings.network).
 1. Click *Add application* and fill in your application ID and the new access key.
 1. See the glorious map showing all devices!
 
