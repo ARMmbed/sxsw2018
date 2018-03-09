@@ -87,7 +87,7 @@ h2 {
   margin: -20px;
 }
 
-#overlay .eui {
+.eui {
   text-align: center;
 }
 
@@ -100,4 +100,8 @@ h2 {
     margin: 0 8px;
     float: right;
   }
+  .connect {
+    display: none;
+  }
 }
+

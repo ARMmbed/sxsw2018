@@ -1,6 +1,3 @@
-let TTN_APP_ID = 'YOUR_APP_ID';
-let TTN_ACCESS_KEY = 'YOUR_ACCESS_KEY';
-
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
@@ -41,6 +38,8 @@ if (fs.existsSync(dbFile)) {
 // And handle requests
 app.get('/', function (req, res, next) {
     let d = Object.keys(devices).map(k => {
+        devices[k].particles = devices[k].particles || [];
+
         let keys = k.split(/\:/g);
         let o = {
             appId: keys[0],
@@ -106,33 +105,33 @@ function connectApplication(appId, accessKey) {
     console.log('Connecting to the The Things Network data channel for app %s...', appId);
     ttn.data(appId, accessKey).then(client => {
         applications[appId].client = client;
-        
+
         client.on('uplink', (devId, payload) => {
             // on device side we did /100, so *100 here to normalize
-            if (payload.payload_fields.analog_in_1) {
+            if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
                 payload.payload_fields.analog_in_1 *= 100;
             }
 
             console.log('Received uplink', appId, devId, payload.payload_fields.analog_in_1);
-    
+
             let key = appId + ':' + devId;
             let d = devices[key] = devices[key] || {};
             d.eui = payload.hardware_serial;
-    
+            d.particles = d.particles || [];
+
             if (!d.lat) {
                 d.lat = 30.2672 + (Math.random() / 10 - 0.05);
             }
             if (!d.lng) {
                 d.lng = -97.7341 + (Math.random() / 10 - 0.05);
             }
-    
-            if (payload.payload_fields.analog_in_1) {
-                d.particles = d.particles || [];
+
+            if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
                 d.particles.push({
                     ts: new Date(payload.metadata.time),
                     value: payload.payload_fields.analog_in_1
                 });
-    
+
                 io.emit('particle-change', {
                     appId: appId,
                     devId: devId,
@@ -142,14 +141,12 @@ function connectApplication(appId, accessKey) {
                 }, payload.metadata.time, payload.payload_fields.analog_in_1);
             }
         });
-    
+
         console.log('Connected to The Things Network data channel for app %s', appId);
     }).catch(err => {
         console.error('Could not connect to The Things Network app %s...', appId, err);
     });
 }
-
-connectApplication(process.env.TTN_APP_ID || TTN_APP_ID, process.env.TTN_ACCESS_KEY || TTN_ACCESS_KEY);
 
 function exitHandler(options) {
     let db = {

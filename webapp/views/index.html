@@ -18,7 +18,7 @@
     <h1>Air pollution monitor</h1>
 
     <div class="connect">
-      <input type="text" id="appId" value="your-app-id">
+      <input type="text" id="appId" placeholder="Your app ID">
       <button onclick="connectApplication()">Connect</button>
     </div>
   </div>
@@ -78,8 +78,11 @@
 
     function connectApplication() {
       var appId = document.getElementById('appId').value;
+      if (!appId) return;
       var accessKey = prompt('Access key for ' + appId, 'ttn-account-v2....');
       socket.emit('connect-application', appId, accessKey);
+
+      document.getElementById('appId').value = '';
     }
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVHcLKC3ja-ZCsyWQLe0eBB3q28F7V6X0&amp;callback=initMap"></script>
