@@ -84,8 +84,8 @@ io.on('connection', socket => {
     });
 });
 
-server.listen(process.env.PORT || 5270, process.env.HOST || '0.0.0.0', function () {
-    console.log('Web server listening on port %s!', process.env.PORT || 5270);
+server.listen(process.env.PORT || 7270, process.env.HOST || '0.0.0.0', function () {
+    console.log('Web server listening on port %s!', process.env.PORT || 7270);
 });
 
 function connectApplication(appId, accessKey) {
