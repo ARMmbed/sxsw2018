@@ -11,7 +11,7 @@ int main() {
         // print something back to the serial console
         printf("Blink! LED is now %d\n", led.read());
 
-        // wait for half a second
-        wait_ms(500);
+        // wait for 100 ms.
+        wait_ms(100);
     }
 }

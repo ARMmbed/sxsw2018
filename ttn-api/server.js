@@ -18,7 +18,7 @@ let data = [
 ];
 
 TTN_APP_ID = process.env['TTN_APP_ID'] || TTN_APP_ID;
-TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
+TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ACCESS_KEY;
 
 let series = [];
 
