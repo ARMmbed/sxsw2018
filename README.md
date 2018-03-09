@@ -516,7 +516,7 @@ There's two ways you can run this web app, locally, just showing your own data; 
     ```
 
 1. Open your web browser and navigate to http://localhost:5270.
-1. On the web page click *Add application* and fill in your app ID and access key.
+1. On the web page, enter your application ID in the text box and click *Connect*. Then enter your access key to connect.
 
 Sensors should automatically show up now! You can also show sensors from other people, you just need their app ID and access key. Ask your neighbors!
 
@@ -540,7 +540,7 @@ We want this data set to be practical, and outlive SXSW! For this purpose we hav
 
 1. Go to the TTN console and add a new access key.
 1. Go to [the hosted application](http://sxsw2018.thethings.network).
-1. Click *Add application* and fill in your application ID and the new access key.
+1. On the web page, enter your application ID in the text box and click *Connect*. Then enter your new access key to connect.
 1. See the glorious map showing all devices!
 
 ![Victory](media/victory.gif)
