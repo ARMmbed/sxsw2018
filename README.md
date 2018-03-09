@@ -4,7 +4,7 @@ Welcome to our session at SXSW 2018. If you have any questions, please just give
 
 In this session you'll be building five examples, introducing you to:
 
-1. Building IoT devices with Arm Mbed.
+1. Building IoT devices with Arm Mbed OS.
 1. Hooking up an optical particle sensor to a development board.
 1. Connecting your device to The Things Network using LoRaWAN.
 1. Data visualization of particle sensors.
@@ -20,7 +20,7 @@ We need to install a few pieces of software that we'll be using.
 
 If you are on Windows, install:
 
-1. [Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
+1. [Arm Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
 1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
@@ -70,7 +70,7 @@ Now let's build a simple application which reads the sensor data and prints it t
 
 1. Plug your board into your computer and open its USB device folder.
 1. Double click on the .HTM file. (This adds your Mbed platform to the Online Compiler.)
-1. Import the example program into the Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018)
+1. Import the example program into the Arm Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018)
 1. Click *Import*.
 
     ![Importing the SXSW2018 repo](media/mbed6.png)
@@ -135,7 +135,7 @@ Blink! LED is now 1
 
 To see debug messages, install:
 
-1. [Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
+1. [Arm Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
     * See above for more instructions.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
 
