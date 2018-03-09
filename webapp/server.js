@@ -20,10 +20,10 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 app.engine('html', hbs.__express);
 
-TTN_APP_ID = process.env['TTN_APP_ID'] || TTN_APP_ID;
-TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
+// Store some state about all applications
+let applications = {};
 
-// Store some state about all devices, you probably want to store this in a database
+// Store some state about all devices
 let devices = {};
 
 if (fs.existsSync(dbFile)) {
@@ -35,8 +35,10 @@ if (fs.existsSync(dbFile)) {
 // And handle requests
 app.get('/', function (req, res, next) {
     let d = Object.keys(devices).map(k => {
+        let keys = k.split(/\:/g);
         let o = {
-            devId: k,
+            appId: keys[0],
+            devId: keys[1],
             eui: devices[k].eui,
             lat: devices[k].lat,
             lng: devices[k].lng,
@@ -49,17 +51,25 @@ app.get('/', function (req, res, next) {
 });
 
 io.on('connection', socket => {
-    socket.on('location-change', (devId, lat, lng) => {
-        if (!devices[devId]) return;
+    socket.on('connect-application', (appId, accessKey) => {
+        console.log('Connecting to application', appId, accessKey)
+    });
 
-        console.log('loc-change', devId, lat, lng);
+    socket.on('location-change', (appId, devId, lat, lng) => {
+        let key = appId + ':' + devId;
+        if (!devices[key]) {
+            console.error('Device not found', appId, devId);
+            return;
+        }
 
-        devices[devId].lat = lat;
-        devices[devId].lng = lng;
+        console.log('Location changed', appId, devId, lat, lng);
 
-        let d = devices[devId];
+        let d = devices[key];
+        d.lat = lat;
+        d.lng = lng;
 
         io.emit('location-change', {
+            appId: appId,
             devId: devId,
             eui: d.eui,
             lat: d.lat,
@@ -68,65 +78,75 @@ io.on('connection', socket => {
     });
 });
 
-
-
-// Connect to TTN
-console.log('Connecting to the The Things Network data channel...');
-
-ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
-    client.on('uplink', (devId, payload) => {
-        // on device side we did /100, so *100 here to normalize
-        if (payload.payload_fields.analog_in_1) {
-            payload.payload_fields.analog_in_1 *= 100;
-        }
-
-        console.log('retrieved uplink', devId, payload.payload_fields.analog_in_1);
-
-        let d = devices[devId] = devices[devId] || {};
-        d.eui = payload.hardware_serial;
-
-        if (!d.lat) {
-            d.lat = 30.2672 + (Math.random() / 10 - 0.05);
-        }
-        if (!d.lng) {
-            d.lng = -97.7341 + (Math.random() / 10 - 0.05);
-        }
-
-        if (payload.payload_fields.analog_in_1) {
-            d.particles = d.particles || [];
-            d.particles.push({
-                ts: new Date(payload.metadata.time),
-                value: payload.payload_fields.analog_in_1
-            });
-
-            io.emit('particle-change', {
-                devId: devId,
-                eui: d.eui,
-                lat: d.lat,
-                lng: d.lng
-            }, payload.metadata.time, payload.payload_fields.analog_in_1);
-        }
-    });
-
-    console.log('Connected to The Things Network data channel');
-}).then(() => {
-    // Now we can start the web server
-    server.listen(process.env.PORT || 5270, process.env.HOST || '0.0.0.0', function () {
-        console.log('Web server listening on port %s!', process.env.PORT || 5270);
-    });
-}).catch(err => {
-    console.error('Could not authenticate with TTN...', err);
+server.listen(process.env.PORT || 5270, process.env.HOST || '0.0.0.0', function () {
+    console.log('Web server listening on port %s!', process.env.PORT || 5270);
 });
+
+function connectApplication(appId, accessKey) {
+    if (applications[appId]) {
+        console.log('Disconnecting existing data channel for app %s', appId)
+        applications[appId].close();
+        delete applications[appId];
+    }
+
+    console.log('Connecting to the The Things Network data channel for app %s...', appId);
+    ttn.data(appId, accessKey).then(client => {
+        applications[appId] = client;
+
+        client.on('uplink', (devId, payload) => {
+            // on device side we did /100, so *100 here to normalize
+            if (payload.payload_fields.analog_in_1) {
+                payload.payload_fields.analog_in_1 *= 100;
+            }
+
+            console.log('Received uplink', appId, devId, payload.payload_fields.analog_in_1);
+    
+            let key = appId + ':' + devId;
+            let d = devices[key] = devices[key] || {};
+            d.eui = payload.hardware_serial;
+    
+            if (!d.lat) {
+                d.lat = 30.2672 + (Math.random() / 10 - 0.05);
+            }
+            if (!d.lng) {
+                d.lng = -97.7341 + (Math.random() / 10 - 0.05);
+            }
+    
+            if (payload.payload_fields.analog_in_1) {
+                d.particles = d.particles || [];
+                d.particles.push({
+                    ts: new Date(payload.metadata.time),
+                    value: payload.payload_fields.analog_in_1
+                });
+    
+                io.emit('particle-change', {
+                    appId: appId,
+                    devId: devId,
+                    eui: d.eui,
+                    lat: d.lat,
+                    lng: d.lng
+                }, payload.metadata.time, payload.payload_fields.analog_in_1);
+            }
+        });
+    
+        console.log('Connected to The Things Network data channel for app %s', appId);
+    }).catch(err => {
+        console.error('Could not connect to The Things Network app %s...', appId, err);
+    });
+}
+
+connectApplication(process.env.TTN_APP_ID || TTN_APP_ID, process.env.TTN_ACCESS_KEY || TTN_ACCESS_KEY);
 
 function exitHandler(options) {
     fs.writeFileSync(dbFile, JSON.stringify(devices), 'utf-8');
 
-    if (options.exit) process.exit();
+    if (options.exit) {
+        process.exit();
+    }
 }
 
-process.on('exit', exitHandler.bind(null, { cleanup:true }));
-process.on('SIGINT', exitHandler.bind(null, { exit:true }));
-process.on('SIGUSR1', exitHandler.bind(null, { exit:true }));
-process.on('SIGUSR2', exitHandler.bind(null, { exit:true }));
-process.on('uncaughtException', exitHandler.bind(null, { exit:true }));
-
+process.on('exit', exitHandler.bind(null, { cleanup: true }));
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }));

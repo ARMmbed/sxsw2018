@@ -12,7 +12,7 @@ function initMap() {
         var marker = new google.maps.Marker({
             position: { lat: device.lat, lng: device.lng },
             map: map,
-            title: device.eui,
+            title: device.appId + ': ' + device.eui,
             draggable: true
         });
 
@@ -84,7 +84,9 @@ function initMap() {
                         socket.removeListener('particle-change', pc);
                         return;
                     }
-                    if (d.devId !== device.devId) return;
+                    if (d.appId !== device.appId && d.devId !== device.devId) {
+                        return;
+                    }
 
                     config.data.labels.push(new Date(ts).toLocaleTimeString().split(' ')[0]);
                     config.data.datasets[0].data.push(value);
@@ -104,9 +106,9 @@ function initMap() {
         });
 
         marker.addListener('dragend', function(evt) {
-            console.log('new lat/lng is', evt.latLng.lat(), evt.latLng.lng());
+            console.log('new lat/lng is', device.appId, device.devId, evt.latLng.lat(), evt.latLng.lng());
 
-            socket.emit('location-change', device.devId, evt.latLng.lat(), evt.latLng.lng());
+            socket.emit('location-change', device.appId, device.devId, evt.latLng.lat(), evt.latLng.lng());
         });
     }
 
