@@ -80,9 +80,14 @@
       var appId = document.getElementById('appId').value;
       if (!appId) return;
       var accessKey = prompt('Access key for ' + appId, 'ttn-account-v2....');
+      if (!accessKey || accessKey === 'ttn-account-v2....') {
+        return alert('Please enter your access key');
+      }
       socket.emit('connect-application', appId, accessKey);
 
       document.getElementById('appId').value = '';
+
+      alert('Added application!');
     }
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVHcLKC3ja-ZCsyWQLe0eBB3q28F7V6X0&amp;callback=initMap"></script>
