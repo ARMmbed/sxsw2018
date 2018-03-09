@@ -22,18 +22,18 @@ If you are on Windows, install:
 
 1. [Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 **Linux**
 
 If you're on Linux, install:
 
 1. screen - e.g. via `sudo apt install screen`
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 **MacOS**
 
-1. [Node.js](https://nodejs.org) - to show visualizations.
+1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 ## Building the circuit
 
