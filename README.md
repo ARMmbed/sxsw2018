@@ -443,16 +443,16 @@ let data = [
 ];
 
 TTN_APP_ID = process.env['TTN_APP_ID'] || TTN_APP_ID;
-TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_APP_ID;
+TTN_ACCESS_KEY = process.env['TTN_ACCESS_KEY'] || TTN_ACCESS_KEY;
 
 let series = [];
 
 ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
     client.on('uplink', (devId, payload) => {
-        // console.log('retrieved uplink message', devId, payload);
+        // console.log('retrieved uplink message', devId, payload.payload_fields.analog_in_1 * 100);
 
         data[0].x.push(new Date(payload.metadata.time).toLocaleTimeString().split(' ')[0]);
-        data[0].y.push(payload.payload_fields.analog_in_1);
+        data[0].y.push(payload.payload_fields.analog_in_1 * 100);
 
         line.setData(data);
         screen.render();
@@ -469,7 +469,7 @@ screen.key(['escape', 'q', 'C-c'], function(ch, key) {
 });
 ```
 
-**Extra credit**
+### Extra credit
 
 There's some limitations in our current graph:
 
@@ -489,8 +489,59 @@ Some extra credit excercises:
     * At the moment nothing is stored.
     * Store the data in a file, or in a database and read that back when you start the application.
 
-## Extra credit
+## 6. A web application to show all your devices
 
-### Relaying data back to the device
+Let's visualize your data in a proper way. We have built a web application that will show all sensors on a map and then graphs the dust count. It works both in your browser and on your phone :-)
 
+![Web app](media/mbed11.png)
 
+There's two ways you can run this web app, locally, just showing your own data; or you can use the hosted version, where we can show data from all sensors. Let's run it locally first, so you can change things.
+
+1. [Download the repository for this workshop](https://github.com/ARMmbed/sxsw2018/archive/master.zip).
+1. Unzip the package.
+1. Open a terminal or command prompt and navigate to the folder where you unzip'ed the package.
+1. Run:
+
+    ```
+    $ cd webapp
+    $ npm install
+    ```
+
+1. Open `server.js` in the webapp folder.
+1. From the terminal, run:
+
+    ```
+    $ node server.js
+    ```
+
+1. Open your web browser and navigate to http://localhost:5270.
+1. On the web page click *Add application* and fill in your app ID and access key.
+
+Sensors should automatically show up now! You can also show sensors from other people, you just need their app ID and access key. Ask your neighbors!
+
+Markers can be dragged around to mark where they are deployed. This is done in sync, open two web browsers, and see markers moving on both sides!
+
+**Extra credit (1) - Marker colors**
+
+The markers are always red. Change the color of the marker depending on current dust levels. You can change the marker icon via:
+
+```js
+marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+```
+
+**Extra credit (2) - Temperature / humidity data**
+
+Remember the temperature and humidity sensors from 3. and 4.? Add that information to the map as well. Look in `maps.js` to see how we do the graphing (it's pretty simple). Data is being sent over a websocket to the browser (see `server.js`). Handle the events and update the graph accordingly.
+
+## 7. Let's build this thing together
+
+We want this data set to be practical, and outlive SXSW! For this purpose we have hosted the web application on a public server. It'd be great if you can all add your device to the map.
+
+1. Go to the TTN console and add a new access key.
+1. Go to [the hosted application](http://bit.ly/sxsw-dust-monitor).
+1. Click *Add application* and fill in your application ID and the new access key.
+1. See the glorious map showing all devices!
+
+![Victory](media/victory.gif)
+
+Done already? Go do some extra credit work!
