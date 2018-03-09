@@ -4,9 +4,9 @@ Welcome to our session at SXSW 2018. If you have any questions, please just give
 
 In this session you'll be building five examples, introducing you to:
 
-1. Building IoT devices with Arm Mbed OS.
+1. Building IoT devices with [Arm Mbed OS](https://os.mbed.com/).
 1. Hooking up an optical particle sensor to a development board.
-1. Connecting your device to The Things Network using LoRaWAN.
+1. Connecting your device to [The Things Network](https://www.thethingsnetwork.org/) using LoRaWAN.
 1. Data visualization of particle sensors.
 1. Drawing all sensors on a single map, giving live insight in Austin's pollution numbers.
 
