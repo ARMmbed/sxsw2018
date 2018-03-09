@@ -59,6 +59,7 @@ app.get('/', function (req, res, next) {
 io.on('connection', socket => {
     socket.on('connect-application', (appId, accessKey) => {
         console.log('Connecting to application', appId, accessKey)
+        connectApplication(appId, accessKey);
     });
 
     socket.on('location-change', (appId, devId, lat, lng) => {
@@ -90,8 +91,12 @@ server.listen(process.env.PORT || 5270, process.env.HOST || '0.0.0.0', function 
 
 function connectApplication(appId, accessKey) {
     if (applications[appId]) {
-        console.log('Already connected to app %s', appId)
-        return;
+        if (!applications[appId].client) {
+            console.log('Already connecting to app %s', appId)
+            return;
+        }
+        applications[appId].client.close();
+        delete applications[appId];
     }
 
     applications[appId] = {
