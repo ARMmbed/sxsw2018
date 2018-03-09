@@ -11,20 +11,33 @@
   float: right;
 }
 body {
-  font-family: "Lato", sans-serif;
   margin: 0;
   padding: 0 20px;
+}
+body, input, button {
+  font-family: "Lato", sans-serif;
   font-weight: 300;
   color: rgb(80, 79, 77);
   font-size: 16px;
 }
 h1 {
-  background: linear-gradient(45deg, #0091BD, #002B49);
-  color: white;
+  display: inline-block;
   font-weight: 400;
   font-size: 28px;
+  margin: 0;
+}
+.title {
+  background: linear-gradient(45deg, #0091BD, #002B49);
+  color: white;
   margin: 20px -20px;
   padding: 20px 20px;
+}
+.connect {
+  float: right;
+}
+.connect button, .connect input {
+  font-size: 16px;
+  padding: 4px;
 }
 a {
   color: #0091BD;

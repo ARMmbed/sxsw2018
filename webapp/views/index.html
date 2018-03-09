@@ -14,7 +14,14 @@
     <a target="_blank" href="https://www.multitech.com/"><img class="logo" src="/mtlogo.png"></a>
   </div>
 
-  <h1>Air pollution monitor</h1>
+  <div class="title">
+    <h1>Air pollution monitor</h1>
+
+    <div class="connect">
+      <input type="text" id="appId" value="your-app-id">
+      <button onclick="connectApplication()">Connect</button>
+    </div>
+  </div>
 
   <div id="map"></div>
 
@@ -68,6 +75,12 @@
       }
       d.marker && d.marker.setPosition(new google.maps.LatLng(device.lat, device.lng));
     });
+
+    function connectApplication() {
+      var appId = document.getElementById('appId').value;
+      var accessKey = prompt('Access key for ' + appId, 'ttn-account-v2....');
+      socket.emit('connect-application', appId, accessKey);
+    }
   </script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVHcLKC3ja-ZCsyWQLe0eBB3q28F7V6X0&amp;callback=initMap"></script>
 
