@@ -35,8 +35,10 @@ if (fs.existsSync(dbFile)) {
 // And handle requests
 app.get('/', function (req, res, next) {
     let d = Object.keys(devices).map(k => {
+        let keys = k.split(/\:/g);
         let o = {
-            devId: k,
+            appId: keys[0],
+            devId: keys[1],
             eui: devices[k].eui,
             lat: devices[k].lat,
             lng: devices[k].lng,
@@ -56,6 +58,7 @@ io.on('connection', socket => {
     socket.on('location-change', (appId, devId, lat, lng) => {
         let key = appId + ':' + devId;
         if (!devices[key]) {
+            console.error('Device not found', appId, devId);
             return;
         }
 
@@ -98,7 +101,8 @@ function connectApplication(appId, accessKey) {
 
             console.log('Received uplink', appId, devId, payload.payload_fields.analog_in_1);
     
-            let d = devices[devId] = devices[devId] || {};
+            let key = appId + ':' + devId;
+            let d = devices[key] = devices[key] || {};
             d.eui = payload.hardware_serial;
     
             if (!d.lat) {
@@ -136,7 +140,9 @@ connectApplication(process.env.TTN_APP_ID || TTN_APP_ID, process.env.TTN_ACCESS_
 function exitHandler(options) {
     fs.writeFileSync(dbFile, JSON.stringify(devices), 'utf-8');
 
-    if (options.exit) process.exit();
+    if (options.exit) {
+        process.exit();
+    }
 }
 
 process.on('exit', exitHandler.bind(null, { cleanup: true }));
