@@ -29,7 +29,7 @@ if (fs.existsSync(dbFile)) {
     devices = db.devices;
     for (appId in db.applications) {
         if (db.applications.hasOwnProperty(appId)) {
-            connectApplication(appId, db.applications[appId]);
+            connectApplication(appId, db.applications[appId]).catch(err => console.error(err));
         }
     }
     console.timeEnd('LoadingDB');
@@ -57,8 +57,10 @@ app.get('/', function (req, res, next) {
 
 io.on('connection', socket => {
     socket.on('connect-application', (appId, accessKey) => {
-        console.log('Connecting to application', appId, accessKey)
-        connectApplication(appId, accessKey);
+        console.log('Connecting to application', appId, accessKey);
+        connectApplication(appId, accessKey)
+            .then(() => socket.emit('connected', appId))
+            .catch(err => socket.emit('connect-failed'));
     });
 
     socket.on('location-change', (appId, devId, lat, lng) => {
@@ -91,8 +93,7 @@ server.listen(process.env.PORT || 7270, process.env.HOST || '0.0.0.0', function 
 function connectApplication(appId, accessKey) {
     if (applications[appId]) {
         if (!applications[appId].client) {
-            console.log('Already connecting to app %s', appId)
-            return;
+            throw 'Already connecting to app ' + appId;
         }
         applications[appId].client.close();
         delete applications[appId];
@@ -103,7 +104,7 @@ function connectApplication(appId, accessKey) {
     }
 
     console.log('Connecting to the The Things Network data channel for app %s...', appId);
-    ttn.data(appId, accessKey).then(client => {
+    return ttn.data(appId, accessKey).then(client => {
         applications[appId].client = client;
 
         client.on('uplink', (devId, payload) => {
@@ -145,6 +146,7 @@ function connectApplication(appId, accessKey) {
         console.log('Connected to The Things Network data channel for app %s', appId);
     }).catch(err => {
         console.error('Could not connect to The Things Network app %s...', appId, err);
+        throw err;
     });
 }
 
