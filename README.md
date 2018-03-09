@@ -70,7 +70,7 @@ Now let's build a simple application which reads the sensor data and prints it t
 
 1. Plug your board into your computer and open its USB device folder.
 1. Double click on the .HTM file. (This adds your Mbed platform to the Online Compiler.)
-1. Import the example program into the Arm Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018)
+1. Import the example program into the Arm Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018).
 1. Click *Import*.
 
     ![Importing the SXSW2018 repo](media/mbed6.png)
