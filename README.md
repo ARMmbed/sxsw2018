@@ -46,6 +46,7 @@ Grab:
 * Optical particle sensor.
 * 3x jumper wires.
 * A box.
+* Battery pack + batteries.
 
 The particle sensor needs to be in the box, because it needs to have consistent lighting. Place the sensor in the box like this (use some velcro):
 
