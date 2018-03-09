@@ -101,7 +101,7 @@ function initMap() {
                     line.update();
                 });
 
-                document.querySelector('#' + olId + ' .eui').textContent = 'Device ' + device.eui;
+                document.querySelector('#' + olId + ' .eui').textContent = 'Device ' + device.eui + ' (' + device.appId + ')';
             });
         });
 
