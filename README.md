@@ -180,6 +180,12 @@ Let's register this device in The Things Network and grab some keys!
 
    ![application-overview](media/application-overview.png)
 
+   >LoRaWAN devices send binary data to minimize the payload size. This reduces channel utilization and power consumption. Applications, however, like to work with JSON objects or even XML. In order to decode binary payload to an object, The Things Network supports [CayenneLPP](https://www.thethingsnetwork.org/docs/devices/arduino/api/cayennelpp.html) and Payload Functions: JavaScript lambda functions to encode and decode binary payload and JSON objects. In this example, we use CayenneLPP.
+
+8. Go to **Payload Format** and select **CayenneLPP**
+
+   ![payload-format](media/payload-format.png)
+
 ### Registering your Device
 
 1. In your application, go to **Devices**
