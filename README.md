@@ -14,7 +14,8 @@ In case you're stuck this document will help you get back on track. If you're a 
 
 ## Prerequisites
 
-We need to install a few pieces of software that we'll be using.
+1. Create an Arm Mbed online account [here](https://os.mbed.com/account/signup/).
+1. Then install the following software for your operating system below.
 
 **Windows**
 
