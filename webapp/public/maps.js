@@ -66,19 +66,21 @@ function initMap() {
                 }
             };
 
+            var olId = 'overlay-' + device.eui;
+
             var infowindow = new google.maps.InfoWindow({
-                content: '<div id="overlay"><p class="eui">Device </p><p><canvas width="300" height="200"></canvas></p></div>'
+                content: '<div id="' + olId + '"><p class="eui">Device </p><p><canvas width="300" height="200"></canvas></p></div>'
             });
 
             infowindow.open(map, this);
             infowindow.addListener('domready', () => {
-                var o = document.querySelector('#overlay');
-                var ctx = document.querySelector('#overlay canvas').getContext('2d');
+                var o = document.querySelector('#' + olId);
+                var ctx = o.querySelector('canvas').getContext('2d');
                 var line = new Chart(ctx, config);
 
                 // @todo: remove this listener when the thing closes
                 socket.on('particle-change', function pc(d, ts, value) {
-                    if (o !== document.querySelector('#overlay')) {
+                    if (o !== document.querySelector('#' + olId)) {
                         socket.removeListener('particle-change', pc);
                         return;
                     }
@@ -97,7 +99,7 @@ function initMap() {
                     line.update();
                 });
 
-                document.querySelector('#overlay .eui').textContent = 'Device ' + device.eui;
+                document.querySelector('#' + olId + ' .eui').textContent = 'Device ' + device.eui;
             });
         });
 
