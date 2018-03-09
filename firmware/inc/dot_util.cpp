@@ -268,7 +268,7 @@ void join_network() {
         if (ret != mDot::MDOT_OK) {
             logError("failed to join network %d:%s", ret, mDot::getReturnCodeString(ret).c_str());
             // in some frequency bands we need to wait until another channel is available before transmitting again
-            uint32_t delay_s = (dot->getNextTxMs() / 1000) + 1;
+            uint32_t delay_s = (dot->getNextTxMs() / 1000) + 10;
             if (delay_s < 2) {
                 logInfo("waiting %lu s until next free channel", delay_s);
                 wait(delay_s);

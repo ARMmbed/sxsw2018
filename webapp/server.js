@@ -75,6 +75,11 @@ console.log('Connecting to the The Things Network data channel...');
 
 ttn.data(TTN_APP_ID, TTN_ACCESS_KEY).then(client => {
     client.on('uplink', (devId, payload) => {
+        // on device side we did /100, so *100 here to normalize
+        if (payload.payload_fields.analog_in_1) {
+            payload.payload_fields.analog_in_1 *= 100;
+        }
+
         console.log('retrieved uplink', devId, payload.payload_fields.analog_in_1);
 
         let d = devices[devId] = devices[devId] || {};

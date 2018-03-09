@@ -56,7 +56,7 @@ function initMap() {
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Particle count (%)'
+                                labelString: 'Particles (pcs/0.01cf)'
                             }
                         }]
                     },
