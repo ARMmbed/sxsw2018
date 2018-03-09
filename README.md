@@ -278,6 +278,8 @@ In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Appli
 
 Now click *Compile* and flash the application to your board again. The board should now connect to The Things Network. Inspect the *Data* tab in the TTN console to see the device connecting. You should first see a 'join request', then a 'join accept', and then data flowing in.
 
+![console-data](media/console-data.png)
+
 ### Extra credit - relaying data back to the device
 
 We only *send* messages to the network. But you can also relay data back to the device. Note that LoRaWAN devices can only receive messages when a RX window is open. This RX window opens right after a transmission, so you can only relay data back to the device right after sending.
