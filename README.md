@@ -33,13 +33,15 @@ If you're on Linux, install:
 
 **MacOS**
 
+If you're on MacOS, install:
+
 1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
 ## Building the circuit
 
 We're using the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) development board, which contains the Multi-Tech xDot module. In addition you'll have a battery holder, some batteries and an optical particle sensor. Let's connect these sensors and verify that the board works.
 
-Grab:
+Grab the following items:
 
 * Development board.
 * Micro-USB cable.
@@ -66,27 +68,16 @@ Plug the jumper wires into the Grove connector, and connect:
 
 Now let's build a simple application which reads the sensor data and prints it to the serial console. Note that it takes three minutes to get the sensor to warm up!
 
-1. Go to [https://os.mbed.com](https://os.mbed.com) and sign up (or sign in).
-1. Go to the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) platform page and click *Add to your Mbed compiler*.
-
-    ![Add to your Mbed compiler](media/mbed1.png)
-
-1. Now click on *Open Mbed Compiler*.
-1. The compiler opens.
-1. In the top right corner make sure you selected 'L-TEK FF1705'.
-
-    ![Select right platform](media/mbed3.png)
-
-1. Click *Import > Click here to import from URL*.
-
-    ![Import](media/mbed8.png)
-
-    ![Import from URL](media/mbed9.png)
-
-1. Enter `https://github.com/armmbed/sxsw2018`
+1. Plug your board into your computer and open its USB device folder.
+1. Double click on the .HTM file. (This adds your Mbed platform to the Online Compiler.)
+1. Import the example program into the Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018)
 1. Click *Import*.
 
     ![Importing the SXSW2018 repo](media/mbed6.png)
+
+1. In the top right corner make sure you selected 'L-TEK FF1705'.
+
+    ![Select right platform](media/mbed3.png)
 
 This has cloned the repository. There are a few examples here, so let's switch between them.
 
@@ -100,7 +91,7 @@ This has cloned the repository. There are a few examples here, so let's switch b
 
     ![Compile](media/mbed4.png)
 
-1. A file downloads, use drag-and-drop to drag the file to the DAPLINK device (like a USB mass storage device).
+1. A binary (.bin) file downloads, use drag-and-drop to drag the file to the DAPLINK device (like a USB mass storage device).
 1. When flashing is complete, hit the **RESET** button on the board (next to USB).
 
 You should see the blue LED blink very fast. Your first program is running! Let's look at the logs now.
@@ -185,7 +176,7 @@ Now let's grab some data from the dust sensor. Make sure you've connected it pro
 
 1. Go into `select_project.h` and change the project to `2`.
 1. Inspect the code in `2_dust_sensor/main.cpp`.
-1. Hit *Compile* again and flash the binary to the board.
+1. Hit *Compile* again and drag-and-drop the binary to the board.
 
 Inspect the logs on the device, and see the sensor counting dust particles. Blow into the sensor or spray something around the air to change it around.
 
