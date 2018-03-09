@@ -28,7 +28,13 @@ let devices = {};
 
 if (fs.existsSync(dbFile)) {
     console.time('LoadingDB');
-    devices = JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
+    let db = JSON.parse(fs.readFileSync(dbFile, 'utf-8'));
+    devices = db.devices;
+    for (appId in db.applications) {
+        if (db.applications.hasOwnProperty(appId)) {
+            connectApplication(appId, db.applications[appId]);
+        }
+    }
     console.timeEnd('LoadingDB');
 }
 
@@ -84,15 +90,18 @@ server.listen(process.env.PORT || 5270, process.env.HOST || '0.0.0.0', function 
 
 function connectApplication(appId, accessKey) {
     if (applications[appId]) {
-        console.log('Disconnecting existing data channel for app %s', appId)
-        applications[appId].close();
-        delete applications[appId];
+        console.log('Already connected to app %s', appId)
+        return;
+    }
+
+    applications[appId] = {
+        accessKey: accessKey
     }
 
     console.log('Connecting to the The Things Network data channel for app %s...', appId);
     ttn.data(appId, accessKey).then(client => {
-        applications[appId] = client;
-
+        applications[appId].client = client;
+        
         client.on('uplink', (devId, payload) => {
             // on device side we did /100, so *100 here to normalize
             if (payload.payload_fields.analog_in_1) {
@@ -138,7 +147,16 @@ function connectApplication(appId, accessKey) {
 connectApplication(process.env.TTN_APP_ID || TTN_APP_ID, process.env.TTN_ACCESS_KEY || TTN_ACCESS_KEY);
 
 function exitHandler(options) {
-    fs.writeFileSync(dbFile, JSON.stringify(devices), 'utf-8');
+    let db = {
+        devices: devices,
+        applications: {}
+    }
+    for (appId in applications) {
+        if (applications.hasOwnProperty(appId)) {
+            db.applications[appId] = applications[appId].accessKey;
+        }
+    }
+    fs.writeFileSync(dbFile, JSON.stringify(db), 'utf-8');
 
     if (options.exit) {
         process.exit();
