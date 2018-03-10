@@ -69,8 +69,11 @@ Plug the jumper wires into the Grove connector, and connect:
 
 Now let's build a simple application which reads the sensor data and prints it to the serial console. Note that it takes three minutes to get the sensor to warm up!
 
-1. Plug your board into your computer and open its USB device folder.
-1. Double click on the .HTM file. (This adds your Mbed platform to the Online Compiler.)
+1. Go to [https://os.mbed.com](https://os.mbed.com) and sign up (or sign in).
+1. Go to the [L-TEK FF1705](https://os.mbed.com/platforms/L-TEK-FF1705/) platform page and click *Add to your Mbed compiler*.
+
+    ![Add to your Mbed compiler](media/mbed1.png)
+
 1. Import the example program into the Arm Mbed Compiler by clicking [this link](https://os.mbed.com/compiler/#import:https://github.com/armmbed/sxsw2018).
 1. Click *Import*.
 
@@ -92,7 +95,10 @@ This has cloned the repository. There are a few examples here, so let's switch b
 
     ![Compile](media/mbed4.png)
 
-1. A binary (.bin) file downloads, use drag-and-drop to drag the file to the DAPLINK device (like a USB mass storage device).
+1. 1. A binary (.bin) file downloads, use drag-and-drop to drag the file to the DAPLINK device (like a USB mass storage device).
+
+    **Note:** Here's a [video](https://youtu.be/L5TcmFFD0iw?t=1m25s).
+
 1. When flashing is complete, hit the **RESET** button on the board (next to USB).
 
 You should see the blue LED blink very fast. Your first program is running! Let's look at the logs now.
@@ -177,9 +183,21 @@ Now let's grab some data from the dust sensor. Make sure you've connected it pro
 
 1. Go into `select_project.h` and change the project to `2`.
 1. Inspect the code in `2_dust_sensor/main.cpp`.
-1. Hit *Compile* again and drag-and-drop the binary to the board.
+1. Click *Compile*.
+1. A file downloads, use drag-and-drop to drag the file to the DAPLINK device (like a USB mass storage device).
 
-Inspect the logs on the device, and see the sensor counting dust particles. Blow into the sensor or spray something around the air to change it around.
+Inspect the logs on the device, and see the sensor counting dust particles. Blow into the sensor or spray something around the air to change it around. A measurement takes 30 seconds.
+
+Your log messages should look like:
+
+```
+Start measuring...
+lpo = 589396, r = 1.964653, c = 1015.913879 pcs/0.01cf
+Start measuring...
+lpo = 401956, r = 1.339853, c = 693.167725 pcs/0.01cf
+```
+
+The `c` value is the concentration of particles.
 
 ### Extra credit
 
@@ -269,6 +287,7 @@ Let's register this device in The Things Network and grab some keys!
 
    ![copy-appeui](media/copy-appeui.png)
 
+
 #### Pasting them in the Online Compiler
 
 In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Application EUI and Application Key in:
@@ -280,6 +299,8 @@ In the Online Compiler now open `firmware/src/ttn_config.h`, and paste the Appli
 Now click *Compile* and flash the application to your board again. The board should now connect to The Things Network. Inspect the *Data* tab in the TTN console to see the device connecting. You should first see a 'join request', then a 'join accept', and then data flowing in.
 
 ![console-data](media/console-data.png)
+
+**Note:** Device not joining? Maybe your EUI is wrong, they're hard to read. On the serial console the EUI is printed. Check if it's the same as in the TTN console. Wrong? Click *Edit* in the TTN console and update the EUI.
 
 ### Extra credit - relaying data back to the device
 
@@ -293,7 +314,7 @@ To send some data to the device:
 
 Now let's do something useful... Control the LED on the board over LoRaWAN.
 
-Look at `RadioEvent.h` to the line where the messages are received. Now change the behavior so that the LED can be controlled through a downlink message.
+Look at `RadioEvent.h` to the line where the messages are received. Now change the behavior so that the LED toggles on/off quickly after a message is received.
 
 *Disabling LED sleep behavior*
 

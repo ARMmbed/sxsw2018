@@ -73,12 +73,17 @@ static void connect_to_ttn(RadioEvent *events) {
             logError("failed to set network join mode to OTA");
         }
     }
+
+    // Use SF10
+    dot->setTxDataRate(mDot::DR0);
+
     update_ota_config_id_key(appEUI, appKey, frequency_sub_band, public_network, ack);
 
     // enable or disable Adaptive Data Rate
     dot->setAdr(adr);
 
     dot->setLogLevel(mts::MTSLog::INFO_LEVEL);
+
 
     // display configuration
     display_config();
