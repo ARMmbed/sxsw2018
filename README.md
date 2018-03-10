@@ -22,6 +22,9 @@ In case you're stuck this document will help you get back on track. If you're a 
 If you are on Windows, install:
 
 1. [Arm Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
+
+    **Note:** Not needed on Windows 10.
+
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
 1. [Node.js](https://nodejs.org/en/download/) - to show visualizations.
 
@@ -144,6 +147,7 @@ To see debug messages, install:
 
 1. [Arm Mbed Windows serial driver](http://os.mbed.com/media/downloads/drivers/mbedWinSerial_16466.exe) - serial driver for the board.
     * See above for more instructions.
+    * No need to install this if you're on Windows 10.
 1. [Tera term](https://osdn.net/projects/ttssh2/downloads/66361/teraterm-4.92.exe/) - to see debug messages from the board.
 
 When you open Tera Term, select *Serial*, and then select the Mbed COM port.
