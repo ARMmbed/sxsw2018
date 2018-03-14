@@ -79,9 +79,9 @@
     socket.on('connected', function(appId) {
       alert('Successfully connected to ' + appId);
     });
-    
-    socket.on('connect-failed', function() {
-      alert('Failed to connect. Please check your app ID and access key.');
+
+    socket.on('connect-failed', function(err) {
+      alert('Failed to connect. Please check your app ID and access key. ("' + err + '")');
     });
 
     function connectApplication() {

@@ -60,7 +60,7 @@ io.on('connection', socket => {
         console.log('Connecting to application', appId, accessKey);
         connectApplication(appId, accessKey)
             .then(() => socket.emit('connected', appId))
-            .catch(err => socket.emit('connect-failed'));
+            .catch(err => socket.emit('connect-failed', JSON.stringify(err)));
     });
 
     socket.on('location-change', (appId, devId, lat, lng) => {
@@ -104,53 +104,75 @@ function connectApplication(appId, accessKey) {
     }
 
     console.log('Connecting to the The Things Network data channel for app %s...', appId);
-    return ttn.data(appId, accessKey).then(client => {
-        applications[appId].client = client;
+    return new Promise((resolve, reject) => {
 
-        client.on('uplink', (devId, payload) => {
-            // on device side we did /100, so *100 here to normalize
-            if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
-                payload.payload_fields.analog_in_1 *= 100;
-            }
+        return ttn.data(appId, accessKey).then(client => {
+            applications[appId].client = client;
 
-            console.log('Received uplink', appId, devId, payload.payload_fields.analog_in_1);
+            client.on('error', (err) => {
+                if (err.message === 'Connection refused: Not authorized') {
+                    console.error('Key is not correct for application ' + appId);
+                    client.close();
+                    delete applications[appId];
+                }
+                reject(err);
+            });
 
-            let key = appId + ':' + devId;
-            let d = devices[key] = devices[key] || {};
-            d.eui = payload.hardware_serial;
-            d.particles = d.particles || [];
+            client.on('connect', () => {
+                console.log('Connected');
+                resolve();
+            });
 
-            if (!d.lat) {
-                d.lat = 30.2672 + (Math.random() / 10 - 0.05);
-            }
-            if (!d.lng) {
-                d.lng = -97.7341 + (Math.random() / 10 - 0.05);
-            }
+            client.on('uplink', (devId, payload) => {
+                // on device side we did /100, so *100 here to normalize
+                if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
+                    payload.payload_fields.analog_in_1 *= 100;
+                }
 
-            if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
-                d.particles.push({
-                    ts: new Date(payload.metadata.time),
-                    value: payload.payload_fields.analog_in_1
-                });
+                console.log('Received uplink', appId, devId, payload.payload_fields.analog_in_1);
 
-                io.emit('particle-change', {
-                    appId: appId,
-                    devId: devId,
-                    eui: d.eui,
-                    lat: d.lat,
-                    lng: d.lng
-                }, payload.metadata.time, payload.payload_fields.analog_in_1);
-            }
+                let key = appId + ':' + devId;
+                let d = devices[key] = devices[key] || {};
+                d.eui = payload.hardware_serial;
+                d.particles = d.particles || [];
+
+                if (!d.lat) {
+                    d.lat = 30.2672 + (Math.random() / 10 - 0.05);
+                }
+                if (!d.lng) {
+                    d.lng = -97.7341 + (Math.random() / 10 - 0.05);
+                }
+
+                if (typeof payload.payload_fields.analog_in_1 !== 'undefined') {
+                    d.particles.push({
+                        ts: new Date(payload.metadata.time),
+                        value: payload.payload_fields.analog_in_1
+                    });
+
+                    io.emit('particle-change', {
+                        appId: appId,
+                        devId: devId,
+                        eui: d.eui,
+                        lat: d.lat,
+                        lng: d.lng
+                    }, payload.metadata.time, payload.payload_fields.analog_in_1);
+                }
+            });
+
+            console.log('Connected to The Things Network data channel for app %s', appId);
+        }).catch(err => {
+            console.error('Could not connect to The Things Network app %s...', appId, err);
+            delete applications[appId];
+            reject(err);
         });
-
-        console.log('Connected to The Things Network data channel for app %s', appId);
-    }).catch(err => {
-        console.error('Could not connect to The Things Network app %s...', appId, err);
-        throw err;
     });
 }
 
-function exitHandler(options) {
+function exitHandler(options, err) {
+    if (err) {
+        console.error('Unhandled exception', err);
+    }
+
     let db = {
         devices: devices,
         applications: {}
